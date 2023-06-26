@@ -7,7 +7,6 @@ description 'Global Cooldown (standalone)'
 version '1.0'
 
 shared_scripts {
-    "callback.lua",
     "config.lua",
 }
 
