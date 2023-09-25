@@ -21,11 +21,11 @@ local function isActive(name)
 end exports("isActive", isActive)
 
 ---@param name string name of the resource / robbery
----@param time number time in hours
+---@param time number time in minutes
 local function startCooldown(name, time)
     if not name then return end
     time = time or Config.DefaultCooldownTimer
-    local endTime = os.time() + (time * 60 * 60)
+    local endTime = os.time() + (time * 60)
     cooldownActive[name] = { startTime = os.time(), endTime = endTime }
     GlobalState.cooldownActive = cooldownActive
 end exports("startCooldown", startCooldown)
@@ -33,7 +33,7 @@ end exports("startCooldown", startCooldown)
 RegisterNetEvent('cooldown:startCooldown', function(name, time)
     if not name then return end
     time = time or Config.DefaultCooldownTimer
-    local endTime = os.time() + (time * 60 * 60)
+    local endTime = os.time() + (time * 60)
     cooldownActive[name] = { startTime = os.time(), endTime = endTime }
     GlobalState.cooldownActive = cooldownActive
 end)
@@ -45,7 +45,7 @@ RegisterCommand('cooldownadd', function(source, args, raw)
         if cooldownActive[name] then
             TriggerClientEvent('cooldown:notify', source, 'Cooldown already active')
         else
-            local endTime = os.time() + (time * 60 * 60)
+            local endTime = os.time() + (time * 60)
             cooldownActive[name] = { startTime = os.time(), endTime = endTime }
             GlobalState.cooldownActive = cooldownActive
             TriggerClientEvent('cooldown:notify', source, string.format('Cooldown enabled: %s for %d hrs', name, time))

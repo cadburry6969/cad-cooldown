@@ -4,7 +4,7 @@ lua54 'yes'
 
 author 'Cadburry'
 description 'Global Cooldown (standalone)'
-version '1.0'
+version '1.1'
 
 shared_scripts {
     "config.lua",
