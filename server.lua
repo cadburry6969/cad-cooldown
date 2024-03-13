@@ -1,5 +1,6 @@
 local cooldownActive = {}
 GlobalState.cooldownActive = {}
+GlobalState.globalCooldown = os.time() + (Config.StartCooldownTimer * 60)
 
 local function checkCooldown()
     if next(cooldownActive) then
@@ -17,6 +18,8 @@ end checkCooldown()
 
 ---@param name string name of the resource / robbery
 local function isActive(name)
+    if GlobalState.globalCooldown then return true end
+    if not name then return false end
     return cooldownActive[name] or false
 end exports("isActive", isActive)
 
@@ -65,3 +68,21 @@ RegisterCommand('cooldownclear', function(source, args, raw)
         end
     end
 end, true)
+
+AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
+    local endTimer = (Config.EndCooldownTimer * 60)
+    if eventData.secondsRemaining == endTimer then
+        GlobalState.globalCooldown = os.time() + endTimer
+    end
+end)
+
+CreateThread(function()
+    while true do
+        Wait(Config.LoopCheckTimer * 60 * 1000)
+        if GlobalState.globalCooldown then
+            if os.time() > GlobalState.globalCooldown then
+                GlobalState.globalCooldown = nil
+            end
+        end
+    end
+end)

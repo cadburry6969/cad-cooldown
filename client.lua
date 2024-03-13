@@ -2,7 +2,8 @@ local cooldownActive = {}
 
 ---@param name string name of the resource / robbery
 local function isActive(name)
-    if not name then return end
+    if GlobalState.globalCooldown then return true end
+    if not name then return false end
     return cooldownActive[name] or false
 end exports("isActive", isActive)
 
